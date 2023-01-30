@@ -15,7 +15,12 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
+from rating.views import SimpleView, SimpleFormView
+from rating.views import RatingListView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    # path('', SimpleView.as_view()),
+    path('', RatingListView.as_view()),
+    path('form/', SimpleFormView.as_view()),
 ]
