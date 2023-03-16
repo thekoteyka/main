@@ -1,0 +1,8 @@
+{% for d in data_list %}
+    {{ d }}
+{% endfor %}
+
+<form action="/pagination_example/" method="get">
+    <input type="submit" name="page" value="{{ next_page }}">
+    <input type="submit" name="page" value="{{ previous_page }}">
+</form>

@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h2>Specify entry</h2>
+    <ul>
+        {{ rating_name_objects }}
+        {% for rating in rating_name_objects %}
+            <li>{{ rating.name }}</li>
+            <li>{{ rating.text }}</li>
+            <li>{{ rating.rate }}</li>
+        {% endfor %}
+    </ul>
+{% endblock %}
