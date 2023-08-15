@@ -10,6 +10,8 @@ from .models import Rating, Subject
 from django.urls import reverse
 from django.views.generic.edit import FormMixin
 from .forms import SimpleForm
+from django.views.generic import FormView
+from django.views.generic.detail import SingleObjectMixin
 
 
 # Create your views here.
@@ -36,13 +38,15 @@ class RatingEntryListView(ListView):
     def get_queryset(self):
         return Subject.objects.filter(name=self.kwargs['name'])
 
-@method_decorator(login_required, name='dispatch')
+# @method_decorator(login_required, name='dispatch')
 class SimpleFormView(View):
     form_class = SimpleForm
     initial = {'foo': 'initial value'}
     template_name = 'form_template.html'
 
     def get(self, request, *args, **kwargs):
+        import time
+        time.sleep(30)
         form = self.form_class(initial=self.initial)
         return render(request, self.template_name, {'form': form})
 
@@ -83,3 +87,43 @@ class RatingDetailView(FormMixin, DetailView):
             return self.form_valid(form)
         else:
             return self.form_invalid(form)
+        
+class RatingsDetailView(DetailView):
+    model = Subject
+    template_name = 'rating/rating_detail.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['form'] = RateForm()
+        return context
+    
+class RatingsDetailFormView(SingleObjectMixin, FormView):
+    template_name = 'rating/rating_detail.html'
+    form_class = RateForm
+    model = Subject
+
+    def get_success_url(self):
+        return reverse('main')
+    
+    def post(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        form = self.get_form()
+        if form.is_valid():
+            user = request.user
+            rating = Rating(user=user, rate=form.data['rate'])
+            rating.save()
+            self.object.rating.add(rating)
+            self.object.save()
+            return self.form_valid(form)
+        else:
+            return self.form_invalid(form)
+        
+class RatingView(View):
+
+    def get(self, request, *args, **kwargs):
+        view = RatingDetailView.as_view()
+        return view(request, *args, **kwargs)
+    
+    def post(self, request, *args, **kwargs):
+        view = RatingsDetailFormView.as_view()
+        return view(request, *args, **kwargs)

@@ -16,7 +16,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 from rating.views import SimpleFormView
-from rating.views import RatingListView, RatingEntryListView, RatingsDetailView, RatingDetailView
+from rating.views import RatingListView, RatingEntryListView, RatingsDetailView, RatingDetailView, RatingView
 from registration.views import RegistrationView, LoginView, ProfileView
 from pagination_example.views import pagination_view
 
@@ -26,7 +26,7 @@ urlpatterns = [
     path('', RatingListView.as_view(), name='main'),
     path('form/', SimpleFormView.as_view()),
     path('entry/<name>/', RatingEntryListView.as_view()),
-    path('rating/<int:pk>', RatingDetailView.as_view()),
+    path('rating/<int:pk>', RatingView.as_view()),
     path('register/', RegistrationView.as_view()),
     path('login/', LoginView.as_view(), name='login'),
     path('accounts/profile/', ProfileView.as_view()),

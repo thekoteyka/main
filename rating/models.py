@@ -20,6 +20,9 @@ class Rating(models.Model):
     date = models.DateTimeField(auto_now_add=True)
     rate = models.IntegerField(choices=Rate.choices)
 
+    def __str__(self):
+        print(self.user, self.date, self.rate)
+
 class Subject(models.Model):
     class Meta:
         ordering = ['-date']
